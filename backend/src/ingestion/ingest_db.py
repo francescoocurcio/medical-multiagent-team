@@ -18,6 +18,9 @@ from langchain_core.documents import Document
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
+# Aggiunta del logging per monitorare il processo di ingestion dei dati medici
+import logging
+logging.basicConfig(level=logging.INFO)
 
 def parse_jsonl_to_documents(filepath : str):
     with open(filepath, 'r', encoding='utf-8') as f:
@@ -31,6 +34,7 @@ def parse_jsonl_to_documents(filepath : str):
                 document = Document(page_content=content, metadata={'id': doc_id, 'title': title})
                 documents.append(document)
 
+    logging.info(f"[PARSING] Parsed {len(documents)} documents from {filepath}")
     return documents
 
 
@@ -55,6 +59,7 @@ def main ():
     # Una volta ottenuta la lista complessiva con tutti i document, voglio iterare a step di 10 documenti
     # per volta e chiamare la funzione ingest_documents per inserire i documenti all'interno di ChromaDB.
     for filepath in glob.glob(os.path.join(data_path, "*.jsonl")):
+        logging.info(f"[INGESTION] Processing file: {filepath}")
         documents = parse_jsonl_to_documents(filepath)
         ingest_documents(chroma_instance, documents, batch_size=batch_size)
 
