@@ -1,0 +1,17 @@
+# File MacOs
+.DS_Store
+
+# Environment
+venv/
+.env
+
+#Backend data
+backend/data/
+
+#MedRAG
+medRAG/
+
+#GitHUB
+.github/
+
+handoff.md
