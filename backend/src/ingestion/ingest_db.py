@@ -44,16 +44,31 @@ def ingest_documents(chroma_instance, documents, batch_size=10):
         batch = documents[i:i + batch_size]
         chroma_instance.add_documents(batch)
 
+def get_embedding_model():
+    """
+    Funzione per ottenere il modello di embedding da HuggingFace. 
+    Il nome del modello viene letto da una variabile d'ambiente.
+    """
+    # Embedding model
+    embedding_model_name = os.getenv("EMBEDDING_MODEL_NAME", "sentence-transformers/all-MiniLM-L6-v2")
+    return HuggingFaceEmbeddings(model_name=embedding_model_name)
+
+def get_chroma_instance():
+    """
+    Funzione per ottenere un'istanza di ChromaDB. 
+    Il percorso per il database persistente viene letto da una variabile d'ambiente.
+    """
+    persisted_dir = os.getenv("PERSISTED_CHROMA_DIR", "backend/chroma_vector_db")
+    embedding_model = get_embedding_model()
+    return Chroma(collection_name="medical_data", embedding_function=embedding_model, persist_directory=persisted_dir)
+
 def main ():
     logging.info("[INGESTION] Starting the ingestion process for medical data.")
     # Path per i dati processati e per il database persistente
     batch_size = 20
     data_path = "backend/data/processed"
-    persisted_dir = "backend/chroma_vector_db"
 
-    # Embedding model
-    embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-    chroma_instance = Chroma(collection_name="medical_data", embedding_function=embedding_model, persist_directory=persisted_dir)
+    chroma_instance = get_chroma_instance()
 
     # Processing dei file JSONL e ingestion dei documenti
     # Il ciclo for scorre tutti i file con estensione .jsonl presenti nella cartella data_path,
