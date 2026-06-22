@@ -8,6 +8,7 @@ venv/
 #Backend data
 backend/data/
 backend/chroma_vector_db/
+backend/src/agents/__pycache__
 
 #MedRAG
 medRAG/
