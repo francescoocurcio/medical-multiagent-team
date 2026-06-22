@@ -1,7 +1,10 @@
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_chroma import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
 from dotenv import load_dotenv
 from state import AgentState
+from ingestion.ingest_db import get_chroma_instance, get_embedding_model
 import json
 import os
 
@@ -28,8 +31,11 @@ def build_llm(json_output: bool) -> ChatGroq:
     )
     return llm
 
+# Lazy initialization degli oggetti condivisi tra i nodi del grafo, in modo da evitare overhead di inizializzazione in ogni nodo.
 LLM_JSON = build_llm(json_output=True)
 LLM_TEXT = build_llm(json_output=False)
+EMBEDDING_MODEL = get_embedding_model()
+CHROMA_INSTANCE = get_chroma_instance()
 
 # Paradigma base di LangGraph: ogni nodo è una funzione Python pura con firma fissa. 
 # Riceve lo stato e restituisce un dizionario con i valori aggiornati sulle chiavi.
@@ -59,10 +65,26 @@ def agent_1_extract_symptoms(state: AgentState) -> dict:
         return {"error": f"Error in agent_1_extract_symptoms: {str(e)}"}
 
 
+def medical_docs_retriever(state: AgentState) -> dict:
+    """
+    Retriever RAG: Recupera i documenti rilevanti da ChromaDB in base ai sintomi estratti\n
+    Input: stato immutabile contenente i sintomi estratti\n
+    Output: dizionario con la lista dei documenti in formato stringa recuperati da ChromaDB\n
+    """
+    symptoms = state['symptoms']
+    if not symptoms:
+        return {"retrieved_docs": []} # Se non ci sono sintomi, non recuperiamo documenti
+
+    query = " ".join(symptoms)
+    retrieved_docs = CHROMA_INSTANCE.similarity_search(query, k=5) # Recupera i 5 documenti più rilevanti
+    retrieved_docs_str = [doc.page_content for doc in retrieved_docs]
+    return {"retrieved_docs": retrieved_docs_str}
+
+
 def agent_3_synthesize_diagnose(state: AgentState) -> dict:
     """
     Agente 3: Sintesi e Diagnosi\n
-    Input: stato immutabile contenente i sintomi estratti\n
+    Input: stato immutabile contenente i sintomi estratti e i documenti recuperati\n
     Output: dizionario con il rapporto medico finale in formato stringa\n
     """
     symptoms = state['symptoms']
