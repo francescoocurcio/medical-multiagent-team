@@ -17,6 +17,7 @@ import json
 from langchain_core.documents import Document
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
+from tqdm import tqdm
 
 # Aggiunta del logging per monitorare il processo di ingestion dei dati medici
 import logging
@@ -44,6 +45,7 @@ def ingest_documents(chroma_instance, documents, batch_size=10):
         chroma_instance.add_documents(batch)
 
 def main ():
+    logging.info("[INGESTION] Starting the ingestion process for medical data.")
     # Path per i dati processati e per il database persistente
     batch_size = 20
     data_path = "backend/data/processed"
@@ -58,7 +60,7 @@ def main ():
     # e per ognuno di essi chiama la funzione parse_jsonl_to_documents per estrarre i documenti.
     # Una volta ottenuta la lista complessiva con tutti i document, voglio iterare a step di 10 documenti
     # per volta e chiamare la funzione ingest_documents per inserire i documenti all'interno di ChromaDB.
-    for filepath in glob.glob(os.path.join(data_path, "*.jsonl")):
+    for filepath in tqdm(glob.glob(os.path.join(data_path, "*.jsonl")), desc="Processing files", unit="file"):
         logging.info(f"[INGESTION] Processing file: {filepath}")
         documents = parse_jsonl_to_documents(filepath)
         ingest_documents(chroma_instance, documents, batch_size=batch_size)
