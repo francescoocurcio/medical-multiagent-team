@@ -23,6 +23,24 @@ from tqdm import tqdm
 import logging
 logging.basicConfig(level=logging.INFO)
 
+def get_embedding_model():
+    """
+    Funzione per ottenere il modello di embedding da HuggingFace. 
+    Il nome del modello viene letto da una variabile d'ambiente.
+    """
+    # Embedding model
+    embedding_model_name = os.getenv("EMBEDDING_MODEL_NAME", "sentence-transformers/all-MiniLM-L6-v2")
+    return HuggingFaceEmbeddings(model_name=embedding_model_name)
+
+def get_chroma_instance():
+    """
+    Funzione per ottenere un'istanza di ChromaDB. 
+    Il percorso per il database persistente viene letto da una variabile d'ambiente.
+    """
+    persisted_dir = os.getenv("PERSISTED_CHROMA_DIR", "backend/chroma_vector_db")
+    embedding_model = get_embedding_model()
+    return Chroma(collection_name="medical_data", embedding_function=embedding_model, persist_directory=persisted_dir)
+
 def parse_jsonl_to_documents(filepath : str):
     with open(filepath, 'r', encoding='utf-8') as f:
         documents = []
@@ -43,24 +61,6 @@ def ingest_documents(chroma_instance, documents, batch_size=10):
     for i in range(0, len(documents), batch_size):
         batch = documents[i:i + batch_size]
         chroma_instance.add_documents(batch)
-
-def get_embedding_model():
-    """
-    Funzione per ottenere il modello di embedding da HuggingFace. 
-    Il nome del modello viene letto da una variabile d'ambiente.
-    """
-    # Embedding model
-    embedding_model_name = os.getenv("EMBEDDING_MODEL_NAME", "sentence-transformers/all-MiniLM-L6-v2")
-    return HuggingFaceEmbeddings(model_name=embedding_model_name)
-
-def get_chroma_instance():
-    """
-    Funzione per ottenere un'istanza di ChromaDB. 
-    Il percorso per il database persistente viene letto da una variabile d'ambiente.
-    """
-    persisted_dir = os.getenv("PERSISTED_CHROMA_DIR", "backend/chroma_vector_db")
-    embedding_model = get_embedding_model()
-    return Chroma(collection_name="medical_data", embedding_function=embedding_model, persist_directory=persisted_dir)
 
 def main ():
     logging.info("[INGESTION] Starting the ingestion process for medical data.")
