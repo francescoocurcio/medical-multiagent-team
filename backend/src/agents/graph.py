@@ -1,5 +1,5 @@
-from state import AgentState
-from nodes import agent_1_extract_symptoms, medical_docs_retriever ,agent_3_synthesize_diagnose
+from src.agents.state import AgentState
+from src.agents.nodes import agent_1_extract_symptoms, medical_docs_retriever ,agent_3_synthesize_diagnose
 from langgraph.graph import StateGraph, END
 
 def route_after_agent_1(state: AgentState) -> str:
