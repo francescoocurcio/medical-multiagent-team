@@ -3,8 +3,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from dotenv import load_dotenv
-from state import AgentState
-from ingestion.ingest_db import get_chroma_instance, get_embedding_model
+from src.agents.state import AgentState
+from src.ingestion.ingest_db import get_chroma_instance, get_embedding_model
 import json
 import os
 
