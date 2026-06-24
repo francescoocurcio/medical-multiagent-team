@@ -12,6 +12,9 @@ backend/src/agents/__pycache__
 backend/__pycache__
 backend/backend/chroma_vector_db
 
+#Frontend data
+frontend/node_modules/
+
 #Api data
 backend/src/api/__pycache__
 
