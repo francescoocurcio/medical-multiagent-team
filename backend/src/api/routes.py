@@ -26,8 +26,8 @@ async def stream_triage(patient_input : str = Query(..., description="Input del 
             if event["event"] == "on_chat_model_stream":
                 chunk_content = event["data"]["chunk"].content
 
-                # Intercettiamo anche il nome del nodo per permettere di separare i messaggi nella UI
-                node_name = event.get("name", "unknown_node")
+                # Usiamo langgraph_node dai metadati per distinguere i nodi del grafo
+                node_name = event.get("metadata", {}).get("langgraph_node", event.get("name", "unknown_node"))
 
                 if chunk_content:
                     # Serializzazione JSON per prevenire la rottura del protocollo SSE
@@ -39,6 +39,8 @@ async def stream_triage(patient_input : str = Query(..., description="Input del 
                     
                     # La sintassi corretta per SSE: "data: <payload>\n\n"
                     yield f"data: {payload}\n\n"
+
+        yield 'data: {"type": "done"}\n\n'
 
     return StreamingResponse(event_generator(), 
                              media_type="text/event-stream",
