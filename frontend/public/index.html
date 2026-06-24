@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Triage AI</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <span class="header-icon">🏥</span>
+            <h1>Medical Triage <span class="accent">AI</span></h1>
+            <p class="subtitle">Multi-agent clinical differential diagnosis system</p>
+        </div>
+    </header>
+
+    <main>
+        <section class="input-section">
+            <form id="triage-form">
+                <label for="patient-input">Patient Symptom Description</label>
+                <textarea
+                    id="patient-input"
+                    placeholder="Describe your symptoms in detail (e.g. I have been experiencing sharp chest pain radiating to my left arm for the past 3 hours...)"
+                    rows="4"
+                    required
+                ></textarea>
+                <button type="submit" id="submit-btn">
+                    <span id="btn-text">Run Triage Analysis</span>
+                    <span id="btn-spinner" class="btn-spinner hidden"></span>
+                </button>
+            </form>
+        </section>
+
+        <section class="results-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-icon">🔍</span>
+                    <h2>Extracted Symptoms</h2>
+                    <span class="agent-badge">Agent 1</span>
+                </div>
+                <div id="symptoms-content" class="panel-body placeholder">
+                    Awaiting analysis...
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-icon">📋</span>
+                    <h2>Differential Diagnosis Report</h2>
+                    <span class="agent-badge">Agent 3</span>
+                </div>
+                <div id="report-content" class="panel-body placeholder">
+                    Awaiting analysis...
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
