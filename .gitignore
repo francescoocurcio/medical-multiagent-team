@@ -15,8 +15,9 @@ backend/backend/chroma_vector_db
 #Frontend data
 frontend/node_modules/
 
-#Scripts
+#.github data
 .github/skills/ui-ux-pro-max/scripts/__pycache__
+.github/copilot-instructions.md
 
 #Api data
 backend/src/api/__pycache__
