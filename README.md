@@ -11,9 +11,7 @@
 A **multi-agent LLM system** for medical symptom analysis and structured report generation. Given a patient's free-text description, the system extracts symptoms, retrieves relevant medical literature from a vector database, and synthesizes a comprehensive diagnostic report — all streamed in real time to the browser via SSE.
 
 <p align="center">
-  <a href="https://uupm.cc">
-    <img src="images/app-screenshot.png" alt="UI UX Pro Max" width="800">
-  </a>
+  <img src="images/app-screenshot.png" width="800">
 </p>
 
 ---
