@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Triage AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=Noto+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="app-topbar">
+        <a href="/" class="app-topbar-back">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Home
+        </a>
+    </div>
+
+    <header>
+        <div class="header-content">
+            <div class="header-logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M19 11h-6V5a1 1 0 00-2 0v6H5a1 1 0 000 2h6v6a1 1 0 002 0v-6h6a1 1 0 000-2z"/>
+                </svg>
+            </div>
+            <h1>Medical Triage <span class="accent">AI</span></h1>
+            <p class="subtitle">Multi-agent clinical differential diagnosis system</p>
+        </div>
+    </header>
+
+    <main>
+        <section class="input-section">
+            <form id="triage-form">
+                <label for="patient-input">Patient Symptom Description</label>
+                <textarea
+                    id="patient-input"
+                    placeholder="Describe the patient's symptoms in detail (e.g. Sharp chest pain radiating to the left arm for the past 3 hours, accompanied by shortness of breath and diaphoresis...)"
+                    rows="5"
+                    required
+                ></textarea>
+                <button type="submit" id="submit-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span id="btn-text">Run Triage Analysis</span>
+                    <span id="btn-spinner" class="btn-spinner hidden"></span>
+                </button>
+            </form>
+        </section>
+
+        <div id="pipeline-status" class="pipeline-status hidden" aria-live="polite" aria-label="Analysis pipeline status">
+            <div class="pipeline-step" id="ps-step1">
+                <div class="ps-dot"></div>
+                <span class="ps-label">Agent 1: Extracting symptoms</span>
+                <div class="ps-spinner"></div>
+            </div>
+            <div class="pipeline-divider" aria-hidden="true"></div>
+            <div class="pipeline-step" id="ps-step2">
+                <div class="ps-dot"></div>
+                <span class="ps-label">Retriever: Fetching evidence</span>
+                <div class="ps-spinner"></div>
+            </div>
+            <div class="pipeline-divider" aria-hidden="true"></div>
+            <div class="pipeline-step" id="ps-step3">
+                <div class="ps-dot"></div>
+                <span class="ps-label">Agent 3: Synthesizing diagnosis</span>
+                <div class="ps-spinner"></div>
+            </div>
+        </div>
+
+        <section class="results-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                            <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </span>
+                    <h2>Extracted Symptoms</h2>
+                    <span class="agent-badge">Agent 1</span>
+                </div>
+                <div id="symptoms-content" class="panel-body placeholder">
+                    Awaiting analysis...
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <rect x="6" y="2" width="12" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </span>
+                    <h2>Differential Diagnosis Report</h2>
+                    <span class="agent-badge">Agent 3</span>
+                </div>
+                <div id="report-content" class="panel-body placeholder">
+                    Awaiting analysis...
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
