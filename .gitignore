@@ -24,8 +24,5 @@ backend/src/ingestion/__pycache__
 #MedRAG
 medRAG/
 
-#GitHUB
-.github/
-
 # Others
 /md files/
